@@ -1,12 +1,7 @@
 import express from 'express';
-
 const router = express.Router();
+const flat_controller = require('../../controllers/FlatController.ts');
 
-router.get('/', (_req, res) => {
-    res.send("Fetching all flats");
-});
-
-router.post('/', (_req, res) => {
-    res.send("Creating a flat");
-});
+router.get('/:id', flat_controller.getFlatById);
+router.post('/', flat_controller.createFlat);
 export default router;
