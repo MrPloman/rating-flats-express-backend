@@ -1,3 +1,4 @@
+import { IFlatModel } from './../interfaces/FlatInterface';
 import mongoose from 'mongoose'
 const { Schema } = mongoose;
 
@@ -194,4 +195,4 @@ const FlatSchema = new Schema({
     }
 });
 
-export const Flat = mongoose.model('Flat', FlatSchema);
+export default mongoose.model<IFlatModel>('Flat', FlatSchema);

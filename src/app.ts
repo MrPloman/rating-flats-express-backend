@@ -20,15 +20,16 @@ if (URI) {
     mongoose.connect(URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    } as ConnectOptions).then(() => {
-        console.log('Connection Succesfull')
-        app.use(express.json());
-        app.use(router);
-        app.listen(PORT, () => {
-            console.log(`Server running on: ${PORT}`)
-        })
-    }
-    ).catch((error) => console.log(`Something went wrong: ${error}`))
+    } as ConnectOptions)
+        .then(() => {
+            console.log('Connection Succesfull')
+            app.use(express.json());
+            app.use(router);
+            app.listen(PORT, () => {
+                console.log(`Server running on: ${PORT}`)
+            })
+        }
+        ).catch((error) => console.log(`Something went wrong: ${error}`))
 }
 else {
     console.log("Cannot load URI to set mongodb")
