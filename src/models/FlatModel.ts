@@ -1,7 +1,7 @@
 import { IFlatModel } from './../interfaces/FlatInterface';
 import mongoose from 'mongoose'
-const { Schema } = mongoose;
 
+const { Schema } = mongoose;
 const FlatSchema = new Schema({
     location: {
         street: {
