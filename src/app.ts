@@ -23,7 +23,8 @@ if (URI) {
     } as ConnectOptions)
         .then(() => {
             console.log('Connection Succesfull')
-            app.use(express.json());
+            app.use(express.json({ strict: false }));
+            app.use(express.urlencoded({ extended: true }));
             app.use(router);
             app.listen(PORT, () => {
                 console.log(`Server running on: ${PORT}`)
