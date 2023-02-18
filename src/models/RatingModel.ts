@@ -4,11 +4,11 @@ import mongoose from 'mongoose'
 const { Schema } = mongoose;
 
 const RatingSchema = new Schema({
-    user: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    flat: {
+    flatId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
