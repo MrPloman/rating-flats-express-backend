@@ -1,7 +1,8 @@
 import { IRating } from './../interfaces/RatingInterface';
+type TypeLabelRating = keyof IRating['rating'];
+
 export function ratingFlatCalculator(ratings: IRating[]): IRating | undefined {
     if (!ratings) return undefined;
-    type TypeLabelRating = keyof IRating['rating'];
     const numberOfRatings: number = ratings.length;
     let averageCalculationOfRatings: IRating = {
         rating: {
@@ -37,8 +38,27 @@ export function ratingFlatCalculator(ratings: IRating[]): IRating | undefined {
     Object.keys(averageCalculationOfRatings.rating).forEach((labelOfRating: any) => {
         if (!labelOfRating) return;
         const label: TypeLabelRating = labelOfRating;
-        averageCalculationOfRatings.rating[label] = averageCalculationOfRatings.rating[label] / numberOfRatings;
+        averageCalculationOfRatings.rating[label] = Math.round(averageCalculationOfRatings.rating[label] / numberOfRatings);
     });
+    // Time to get total
+    averageCalculationOfRatings = getRatingTotalValue(averageCalculationOfRatings);
+    // And return total
     return averageCalculationOfRatings;
+}
 
+export function getRatingTotalValue(ratingValues: IRating): IRating {
+    // Array to get all values of rating object
+    let arrayOfValues: number[] = [];
+    // Converting provisionally from object to array to iterate properly and push all the values in arrayValues
+    Object.keys(ratingValues.rating).forEach((labelOfRating: any) => {
+        let labelKey: TypeLabelRating = labelOfRating;
+        if (labelKey !== 'total') arrayOfValues.push(ratingValues.rating[labelKey]);
+    });
+    // It uses reduce to simplify and make addition operation whit them
+    const sumWithInitial: number = arrayOfValues.reduce(
+        (accumulator, currentValue) => accumulator + currentValue, 0
+    );
+    // Asign addition result to total, dividing that result with the number of keys to get an average 
+    ratingValues.rating.total = Math.round(sumWithInitial / arrayOfValues.length);
+    return ratingValues;
 }
