@@ -22,7 +22,7 @@ if (URI) {
         useUnifiedTopology: true
     } as ConnectOptions)
         .then(() => {
-            console.log('Connection Succesfull')
+            console.log('Connection Succesfull');
             app.use(express.json({ strict: false }));
             app.use(express.urlencoded({ extended: true }));
             app.use(router);

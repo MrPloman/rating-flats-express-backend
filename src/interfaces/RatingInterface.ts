@@ -1,8 +1,8 @@
 import { ObjectId } from "mongoose"
 
 export interface IRating {
-    userId: ObjectId
-    flatId: ObjectId,
+    userId?: ObjectId
+    flatId?: ObjectId,
     rating: {
         total: number,
         price: number,
