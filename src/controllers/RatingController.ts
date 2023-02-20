@@ -1,12 +1,12 @@
-import { IRating } from "./../interfaces/RatingInterface";
+import { IRating } from "@/interfaces/RatingInterface";
 import { JSONResponseInterface } from "@/interfaces/generic/JSONResponseInterface";
-import { TypedResponse } from "../interfaces/generic/ResponseInterface";
-import { generateJsonResponse } from "../services/ResponseGenerator";
+import { TypedResponse } from "@/interfaces/generic/ResponseInterface";
+import { generateJsonResponse } from "@/services/ResponseGenerator";
 import { Request } from "express";
-import Rating from "../models/RatingModel";
-import Flat from "../models/FlatModel";
+import Rating from "@/models/RatingModel";
+import Flat from "@/models/FlatModel";
 import { IFlat } from "@/interfaces/FlatInterface";
-import { ratingFlatCalculator } from "../services/RatingFlatCalculator";
+import { ratingFlatCalculator } from "@/services/RatingFlatCalculator";
 
 const rating = Rating;
 const flat = Flat;

@@ -1,9 +1,9 @@
-import { generateJsonResponse } from "../services/ResponseGenerator";
-import { IFlat } from "./../interfaces/FlatInterface";
-import { JSONResponseInterface } from "../interfaces/generic/JSONResponseInterface";
-import { TypedResponse } from "./../interfaces/generic/ResponseInterface";
+import { generateJsonResponse } from "@/services/ResponseGenerator";
+import { IFlat } from "@/interfaces/FlatInterface";
+import { JSONResponseInterface } from "@/interfaces/generic/JSONResponseInterface";
+import { TypedResponse } from "@/interfaces/generic/ResponseInterface";
 import { Request } from "express";
-import Flat from "../models/FlatModel";
+import Flat from "@/models/FlatModel";
 import { Error, Model } from "mongoose";
 import { IFlatModel } from "@/interfaces/FlatInterface";
 
