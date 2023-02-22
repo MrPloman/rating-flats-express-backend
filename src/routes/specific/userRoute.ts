@@ -1,12 +1,11 @@
+import { AuthController } from '@/controllers/AuthController';
 import express from 'express';
 
 const router = express.Router();
 
-router.get('/', (_req, res) => {
-    res.send("Fetching all users");
-});
+const auth_controller = new AuthController;
 
-router.post('/', (_req, res) => {
-    res.send("Creating user");
-});
+router.post('/', auth_controller.registerUser);
+
+
 export default router;

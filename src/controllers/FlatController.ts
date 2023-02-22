@@ -55,11 +55,14 @@ export class FlatController {
     public updateFlat(req: Request, res: TypedResponse<any>) {
         if (!req || !req.body || !req.body.flat) res.json(generateJsonResponse(req.method, undefined, undefined, 400, "Required a valid body, missing flat in body :: updateFlat"));
         else {
-            flat.findByIdAndUpdate(req.body.flat._id, req.body.flat, { upsert: true, new: true }, (_err: any, flatUpdated: IFlat) => {
-                if (flatUpdated) res.json(generateJsonResponse(req.method, flatUpdated, undefined, 200, "Updated flat :: updateFlat"));
-                else if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 406, "Error in the query :: updateFlat"));
-            });
-
+            try {
+                flat.findByIdAndUpdate(req.body.flat._id, req.body.flat, { upsert: true, new: true }, (_err: any, flatUpdated: IFlat) => {
+                    if (flatUpdated) res.json(generateJsonResponse(req.method, flatUpdated, undefined, 200, "Updated flat :: updateFlat"));
+                    else if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 406, "Error in the query :: updateFlat"));
+                });
+            } catch (error) {
+                res.json(generateJsonResponse(req.method, undefined, error, 406, "Error in the query :: updateFlat"));
+            }
         }
     }
 }
