@@ -1,4 +1,4 @@
-import { IRating } from './../interfaces/RatingInterface'
+import { IRating } from '../interfaces/RatingInterface'
 type TypeLabelRating = keyof IRating['rating']
 
 export function ratingFlatCalculator(ratings: IRating[]): IRating | undefined {

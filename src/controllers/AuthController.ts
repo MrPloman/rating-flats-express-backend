@@ -1,10 +1,11 @@
 import UserModel from '../models/UserModel'
 import { JSONResponseInterface } from '../interfaces/generic/JSONResponseInterface'
 import { TypedResponse } from '../interfaces/generic/ResponseInterface'
-import { generateJsonResponse } from '../services/ResponseGenerator'
+import { generateJsonResponse } from '../services/ResponseGeneratorService'
 import { Request } from 'express'
 import { IUser } from '@/interfaces/UserInterface'
 import { checkPass, encryptPass } from '../services/EncryptionService'
+import { generateAccessToken } from '../services/TokenService'
 
 const user = UserModel
 
@@ -51,16 +52,40 @@ export class AuthController {
         }
     }
     public loginUser(req: Request, res: TypedResponse<JSONResponseInterface>) {
-        user.findOne({ email: req.body.email }, (_err: any, userFound: IUser) => {
-            console.log(userFound)
-            if (userFound) {
-                checkPass(req.body.password, userFound.password).then(result => {
-                    console.log(result)
-                    if (result) res.json(generateJsonResponse(req.method, userFound, undefined, 200, `Uncaught exception`))
+        if (!req.body || !req.body.email || !req.body.password) res.json(generateJsonResponse(req.method, undefined, undefined, 404, `Please provide a valid body: email and password required`))
+        else {
+            try {
+                user.findOne({ email: req.body.email }, (_err: Error, userFound: IUser) => {
+                    if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 500, `Error in request to user collections`))
+                    if (userFound) {
+                        try {
+                            checkPass(req.body.password, userFound.password)
+                                .then((passChecked: boolean) => {
+                                    if (passChecked) {
+                                        const userInfo = {
+                                            email: userFound.email,
+                                            information: userFound.information,
+                                            token: generateAccessToken(req.body.email),
+                                        }
+                                        res.json(generateJsonResponse(req.method, userInfo, undefined, 200, `Uncaught exception`))
+                                    } else {
+                                        res.json(generateJsonResponse(req.method, {}, undefined, 403, `Access Denied, password doesn't match.`))
+                                    }
+                                })
+                                .catch((error: Error) => {
+                                    if (error) res.json(generateJsonResponse(req.method, undefined, error, 500, `Internal Server Error: Uncaught exception in check Password function`))
+                                })
+                        } catch (error) {
+                            res.json(generateJsonResponse(req.method, undefined, error, 500, `Internal Server Error: Checking Password`))
+                        }
+                    } else {
+                        res.json(generateJsonResponse(req.method, {}, undefined, 400, `Email not found`))
+                    }
                 })
+            } catch (error) {
+                res.json(generateJsonResponse(req.method, undefined, error, 500, `Internal Server Error in Mongo Request`))
             }
-        })
-        return null
+        }
     }
     public updateUser() {
         return null

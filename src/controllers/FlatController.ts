@@ -1,4 +1,4 @@
-import { generateJsonResponse } from '../services/ResponseGenerator'
+import { generateJsonResponse } from '../services/ResponseGeneratorService'
 import { IFlat } from '../interfaces/FlatInterface'
 import { JSONResponseInterface } from '../interfaces/generic/JSONResponseInterface'
 import { TypedResponse } from '../interfaces/generic/ResponseInterface'

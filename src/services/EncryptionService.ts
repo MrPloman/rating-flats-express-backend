@@ -16,13 +16,6 @@ export async function encryptPass(password: string): Promise<string | null | unk
 }
 
 export async function checkPass(password: string, hash: string): Promise<boolean> {
-    if (!password) return false
-    const isCorrect: Promise<boolean> = new Promise((resolve, reject) => {
-        bcrypt.compare(password, hash, function (err, result) {
-            if (err) reject
-            if (result) resolve
-        })
-    })
-    console.log(isCorrect)
-    return isCorrect
+    if (!password || !hash) return false
+    return bcrypt.compare(password, hash)
 }
