@@ -6,6 +6,7 @@ import { Request } from 'express'
 import { IUser } from '@/interfaces/UserInterface'
 import { checkPass, encryptPass } from '../services/EncryptionService'
 import { generateAccessToken, verifyAccessToken } from '../services/TokenService'
+import { sendEmail } from '../services/MailerService'
 
 const user = UserModel
 
@@ -43,7 +44,6 @@ export class AuthController {
                                         } catch (error) {
                                             res.json(generateJsonResponse(req.method, undefined, error, 500, `Uncaught exception`))
                                         }
-                                        // res.json(generateJsonResponse(req.method, { a: 'ac' }, undefined, 500, `PERDo exception`))
                                     } else {
                                         res.json(generateJsonResponse(req.method, undefined, undefined, 500, `Error encrypting your password`))
                                     }
@@ -157,6 +157,19 @@ export class AuthController {
             } catch (error) {
                 res.json(generateJsonResponse(req.method, undefined, error, 500, `Internal Server Error: Finding user by email`))
             }
+        }
+    }
+    public recoveryPassword(req: Request, res: TypedResponse<JSONResponseInterface>) {
+        console.log(req.body.to)
+        if (!req.body.to) res.json(generateJsonResponse(req.method, undefined, undefined, 500, `Internal Server Error: Finding user by email`))
+        else {
+            sendEmail(req.body.to, 'OYE', 'Esto es el cuerpo')
+                .then(mailStatus => {
+                    if (mailStatus) res.json(generateJsonResponse(req.method, mailStatus, undefined, 200, `Updated properly`))
+                })
+                .catch(err => {
+                    res.json(generateJsonResponse(req.method, undefined, err, 500, `Internal Server Error: Finding user by email`))
+                })
         }
     }
     public deleteUser() {
