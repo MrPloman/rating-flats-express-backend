@@ -1,46 +1,50 @@
-import { IUserModel } from "../interfaces/UserInterface";
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+import { IUserModel } from '../interfaces/UserInterface'
+import mongoose from 'mongoose'
+const { Schema } = mongoose
 
 const UserSchema = new Schema({
-  email: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  information: {
-    username: {
-      type: String,
-      required: false,
+    email: {
+        type: String,
+        required: true,
     },
-    name: {
-      type: String,
-      required: false,
+    password: {
+        type: String,
+        required: true,
     },
-    surname: {
-      type: String,
-      required: false,
+    information: {
+        username: {
+            type: String,
+            required: false,
+        },
+        name: {
+            type: String,
+            required: false,
+        },
+        surname: {
+            type: String,
+            required: false,
+        },
+        avatar: {
+            type: String,
+            required: false,
+        },
     },
-    avatar: {
-      type: String,
-      required: false,
+    creationDate: {
+        type: Date,
+        required: true,
     },
-  },
-  creationDate: {
-    type: Date,
-    required: true,
-  },
-  updatingDate: {
-    type: Date,
-    required: false,
-  },
-  ratings: {
-    type: Array<mongoose.Schema.Types.ObjectId>,
-    required: false,
-  },
-});
+    updatingDate: {
+        type: Date,
+        required: false,
+    },
+    enabled: {
+        type: Boolean,
+        required: true,
+    },
+    ratings: {
+        type: Array<mongoose.Schema.Types.ObjectId>,
+        required: false,
+    },
+})
 
-export default mongoose.model<IUserModel>("User", UserSchema);
+export default mongoose.model<IUserModel>('User', UserSchema)

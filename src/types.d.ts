@@ -1,1 +1,1 @@
-export type Country = 'SP' | 'PT' | 'IT' | 'UK' | 'FR' | 'DE';
+export type Country = 'SP' | 'PT' | 'IT' | 'UK' | 'FR' | 'DE'

@@ -28,6 +28,7 @@ export class AuthController {
                                             password: resultOfEncryption,
                                             creationDate: new Date(),
                                             updatingDate: new Date(),
+                                            enabled: true,
                                             information: {
                                                 avatar: req.body?.information?.avatar ? req.body.information.avatar : '',
                                                 name: req.body?.information?.name ? req.body.information.name : '',
@@ -39,7 +40,13 @@ export class AuthController {
                                             user.create(userLet, (_err, userCreated: IUser) => {
                                                 if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 500, `User created properly`))
 
-                                                if (userCreated) res.json(generateJsonResponse(req.method, userCreated, undefined, 200, `Uncaught exception`))
+                                                if (userCreated) {
+                                                    // sendEmail(userCreated.email, 'Confirm Account from Rating Flats', 'confirm-account', {
+                                                    //     url: '',
+                                                    // })
+
+                                                    res.json(generateJsonResponse(req.method, userCreated, undefined, 200, `Uncaught exception`))
+                                                }
                                             })
                                         } catch (error) {
                                             res.json(generateJsonResponse(req.method, undefined, error, 500, `Uncaught exception`))
@@ -163,7 +170,7 @@ export class AuthController {
         console.log(req.body.to)
         if (!req.body.to) res.json(generateJsonResponse(req.method, undefined, undefined, 500, `Internal Server Error: Finding user by email`))
         else {
-            sendEmail(req.body.to, 'OYE', 'Esto es el cuerpo')
+            sendEmail(req.body.to, 'Recovery Password form Rating Flats', 'recovery-password', {})
                 .then(mailStatus => {
                     if (mailStatus) res.json(generateJsonResponse(req.method, mailStatus, undefined, 200, `Updated properly`))
                 })
