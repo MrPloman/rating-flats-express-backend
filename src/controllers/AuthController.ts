@@ -167,16 +167,24 @@ export class AuthController {
         }
     }
     public recoveryPassword(req: Request, res: TypedResponse<JSONResponseInterface>) {
-        console.log(req.body.to)
         if (!req.body.to) res.json(generateJsonResponse(req.method, undefined, undefined, 500, `Internal Server Error: Finding user by email`))
         else {
-            sendEmail(req.body.to, 'Recovery Password form Rating Flats', 'recovery-password', {})
-                .then(mailStatus => {
-                    if (mailStatus) res.json(generateJsonResponse(req.method, mailStatus, undefined, 200, `Updated properly`))
+            try {
+                user.findOne({ email: req.body.to }, (_err: Error, userFound: IUser) => {
+                    if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 500, `Internal Server Error: Finding user by email`))
+                    if (userFound) {
+                        sendEmail(req.body.to, 'Recovery Password form Rating Flats', 'recovery-password', userFound)
+                            .then(mailStatus => {
+                                if (mailStatus) res.json(generateJsonResponse(req.method, mailStatus, undefined, 200, `Updated properly`))
+                            })
+                            .catch(err => {
+                                res.json(generateJsonResponse(req.method, undefined, err, 500, `Internal Server Error: Finding user by email`))
+                            })
+                    }
                 })
-                .catch(err => {
-                    res.json(generateJsonResponse(req.method, undefined, err, 500, `Internal Server Error: Finding user by email`))
-                })
+            } catch (error) {
+                res.json(generateJsonResponse(req.method, undefined, error, 500, `Internal Server Error: Finding user by email`))
+            }
         }
     }
     public deleteUser() {
