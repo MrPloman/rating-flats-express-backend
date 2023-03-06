@@ -8,11 +8,21 @@ export function generateAccessToken(email: string) {
     return jwt.sign({ exp: expirationTime, data: email }, SECRET)
 }
 
-export async function generateResetPasswordToken() {
-    const resetToken = crypto.randomBytes(32).toString('hex')
-    await bcrypt.hash(resetToken, Number(SECRET)).then(hashed => {
-        return hashed
-    })
+export async function generateURLToken() {
+    try {
+        const resetToken = crypto.randomBytes(32).toString('hex')
+        return await bcrypt
+            .hash(resetToken, Number(SECRET))
+            .then(hashed => {
+                if (!hashed) return
+                return { hashedToken: hashed, secretToken: resetToken }
+            })
+            .catch(err => {
+                return err
+            })
+    } catch (error) {
+        return await error
+    }
 }
 
 export function verifyAccessToken(token: string): any {

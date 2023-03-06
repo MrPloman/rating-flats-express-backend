@@ -4,10 +4,13 @@ import { TypedResponse } from '../interfaces/generic/ResponseInterface'
 import { generateJsonResponse } from '../services/ResponseGeneratorService'
 import { Request } from 'express'
 import { IUser } from '@/interfaces/UserInterface'
+import { IToken } from '../interfaces/TokenInterface'
 import { checkPass, encryptPass } from '../services/EncryptionService'
 import { generateAccessToken, verifyAccessToken } from '../services/TokenService'
-import { sendEmail } from '../services/MailerService'
+import { sendAuthEmail } from '../services/MailerService'
+import TokenModel from '../models/TokenModel'
 
+const token = TokenModel
 const user = UserModel
 
 export class AuthController {
@@ -28,7 +31,7 @@ export class AuthController {
                                             password: resultOfEncryption,
                                             creationDate: new Date(),
                                             updatingDate: new Date(),
-                                            enabled: true,
+                                            enabled: false,
                                             information: {
                                                 avatar: req.body?.information?.avatar ? req.body.information.avatar : '',
                                                 name: req.body?.information?.name ? req.body.information.name : '',
@@ -41,11 +44,25 @@ export class AuthController {
                                                 if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 500, `User created properly`))
 
                                                 if (userCreated) {
-                                                    // sendEmail(userCreated.email, 'Confirm Account from Rating Flats', 'confirm-account', {
-                                                    //     url: '',
-                                                    // })
-
-                                                    res.json(generateJsonResponse(req.method, userCreated, undefined, 200, `Uncaught exception`))
+                                                    try {
+                                                        sendAuthEmail(req.body.email, 'Confirm Account from Rating Flats', 'confirm-account', userCreated, 'confirm').then(mailStatus => {
+                                                            if (mailStatus) {
+                                                                try {
+                                                                    const tokenToSet = mailStatus.token
+                                                                    tokenToSet.userId = userCreated._id
+                                                                    tokenToSet.expirationDate = Date.parse(tokenToSet.creationDate) + 3600000
+                                                                    token.create(mailStatus.token, (_err: any, tokenCreated: IToken) => {
+                                                                        if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 500, `Uncaught exception`))
+                                                                        if (tokenCreated) res.json(generateJsonResponse(req.method, userCreated, undefined, 200, `User Created, check your email`))
+                                                                    })
+                                                                } catch (error) {
+                                                                    res.json(generateJsonResponse(req.method, undefined, error, 500, `Uncaught exception`))
+                                                                }
+                                                            }
+                                                        })
+                                                    } catch (error) {
+                                                        res.json(generateJsonResponse(req.method, undefined, error, 500, `Uncaught exception`))
+                                                    }
                                                 }
                                             })
                                         } catch (error) {
@@ -166,16 +183,30 @@ export class AuthController {
             }
         }
     }
-    public recoveryPassword(req: Request, res: TypedResponse<JSONResponseInterface>) {
+    public resetPassword(req: Request, res: TypedResponse<JSONResponseInterface>) {
         if (!req.body.to) res.json(generateJsonResponse(req.method, undefined, undefined, 500, `Internal Server Error: Finding user by email`))
         else {
             try {
-                user.findOne({ email: req.body.to }, (_err: Error, userFound: IUser) => {
+                user.findOne({ email: req.body.to }, (_err: Error, userFound: any) => {
                     if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 500, `Internal Server Error: Finding user by email`))
                     if (userFound) {
-                        sendEmail(req.body.to, 'Recovery Password form Rating Flats', 'recovery-password', userFound)
+                        sendAuthEmail(req.body.to, 'Recovery Password form Rating Flats', 'reset-password', userFound, 'reset')
                             .then(mailStatus => {
-                                if (mailStatus) res.json(generateJsonResponse(req.method, mailStatus, undefined, 200, `Updated properly`))
+                                if (mailStatus && mailStatus.token) {
+                                    try {
+                                        const tokenToSet = mailStatus.token
+                                        tokenToSet.userId = userFound._id
+                                        tokenToSet.expirationDate = Date.parse(tokenToSet.creationDate) + 3600000
+                                        token.create(tokenToSet, (_err: Error, tokenGenerated: IToken) => {
+                                            if (_err) res.json(generateJsonResponse(req.method, undefined, _err, 500, `Internal Server Error: Creating token`))
+                                            if (tokenGenerated) res.json(generateJsonResponse(req.method, { email: mailStatus.mail, token: tokenGenerated }, undefined, 200, `Updated properly`))
+                                        })
+                                    } catch (error) {
+                                        res.json(generateJsonResponse(req.method, undefined, error, 500, `Internal server error generating token`))
+                                    }
+                                } else {
+                                    res.json(generateJsonResponse(req.method, undefined, undefined, 500, `Internal server error generating token`))
+                                }
                             })
                             .catch(err => {
                                 res.json(generateJsonResponse(req.method, undefined, err, 500, `Internal Server Error: Finding user by email`))
