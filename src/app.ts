@@ -8,9 +8,16 @@ import i18next from 'i18next'
 import Backend from 'i18next-fs-backend'
 import i18nextMiddleware from 'i18next-http-middleware'
 import * as HandlebarsI18n from 'handlebars-i18n'
+import cors from 'cors'
 
 // VARIABLES SECTION
 const app = express()
+const corsOptions = {
+    origin: 'http://localhost:3500',
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+}
+
 const PORT = process.env.PORT || 80
 
 // Initialize i18n to translate messages
@@ -41,6 +48,8 @@ if (URI) {
         } as ConnectOptions)
         .then(() => {
             console.log('Connection Succesfull')
+            // Setting cors
+            app.use(cors(corsOptions))
             // Using handlebars engine
             app.engine('handlebars', engine())
             // Using json parser
