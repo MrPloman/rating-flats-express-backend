@@ -51,7 +51,7 @@ export class FlatController {
                     else if (!_err && !flatFound) {
                         flat.create(req.body.flat, (_err: Error, flatCreated: IFlat) => {
                             if (_err || !flatCreated) res.json(generateJsonResponse(req.method, undefined, _err, 406, 'Not acceptable values in some fields of BODY :: createFlat'))
-                            if (flatCreated) res.json(generateJsonResponse(req.method, { flat: flatCreated }, undefined, 201, 'Accepted body values. Flat created properly :: createFlat'))
+                            if (flatCreated) res.json(generateJsonResponse(req.method, { flat: flatCreated }, undefined, 200, 'Accepted body values. Flat created properly :: createFlat'))
                         })
                     }
                 })

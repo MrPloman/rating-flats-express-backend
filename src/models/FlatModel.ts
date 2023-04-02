@@ -1,198 +1,198 @@
-import { IFlatModel } from './../interfaces/FlatInterface';
+import { IFlatModel } from './../interfaces/FlatInterface'
 import mongoose from 'mongoose'
 
-const { Schema } = mongoose;
+const { Schema } = mongoose
 const FlatSchema = new Schema({
     location: {
         street: {
             type: String,
-            required: true
+            required: true,
         },
         address: {
             type: String,
-            required: true
+            required: true,
         },
         number: {
             type: Number,
-            required: true
+            required: true,
         },
         floor: {
             type: Number,
-            required: true
+            required: true,
         },
         door: {
             type: String || Number,
-            required: true
+            required: true,
         },
         stair: {
             type: String,
-            required: false
+            required: false,
         },
         block: {
             type: String,
-            required: false
+            required: false,
         },
         gate: {
             type: String,
-            required: false
+            required: false,
         },
         zip: {
             type: String || Number,
-            required: true
+            required: true,
         },
         city: {
             type: String,
-            required: true
+            required: true,
         },
         province: {
             type: String,
-            required: false
+            required: false,
         },
         state: {
             type: String,
-            required: false
+            required: false,
         },
         country: {
             type: String,
-            required: true
+            required: true,
         },
         lng: {
             type: Number,
-            required: true
+            required: true,
         },
         lat: {
             type: Number,
-            required: true
+            required: true,
         },
     },
     specs: {
         m2: {
             type: Number,
-            required: false
+            required: false,
         },
         roomsNumber: {
             type: Number,
-            required: false
+            required: false,
         },
         bathroomsNumber: {
             type: Number,
-            required: false
+            required: false,
         },
         deposit: {
             type: Number,
-            required: false
+            required: false,
         },
-        depositMontsh: {
+        depositMonths: {
             type: Number,
-            required: false
-        }
+            required: false,
+        },
     },
     rating: {
         total: {
             type: Number,
-            required: true
+            required: true,
         },
         price: {
             type: Number,
-            required: true
+            required: true,
         },
         clearfull: {
             type: Number,
-            required: true
+            required: true,
         },
         modern: {
             type: Number,
-            required: true
+            required: true,
         },
         amenities: {
             type: Number,
-            required: true
+            required: true,
         },
         publicTransport: {
             type: Number,
-            required: true
+            required: true,
         },
         neighbours: {
             type: Number,
-            required: true
+            required: true,
         },
         neighbourhood: {
             type: Number,
-            required: true
+            required: true,
         },
         building: {
             type: Number,
-            required: true
+            required: true,
         },
         tenantment: {
             type: Number,
-            required: true
+            required: true,
         },
         realState: {
             type: Number,
-            required: true
+            required: true,
         },
         views: {
             type: Number,
-            required: true
-        }
+            required: true,
+        },
     },
     price: {
         firstPrice: {
             date: {
                 type: String,
-                required: true
+                required: false,
             },
             value: {
                 type: Number,
-                required: true
-            }
+                required: false,
+            },
         },
         currentPrice: {
             date: {
                 type: String,
-                required: true
+                required: false,
             },
             value: {
                 type: Number,
-                required: true
-            }
+                required: false,
+            },
         },
         averagePrice: {
             type: Number,
-            required: true
-        }
+            required: false,
+        },
     },
     others: {
         buildingYear: {
             type: Number,
-            required: false
+            required: false,
         },
         floorsNumber: {
             type: Number,
-            required: false
+            required: false,
         },
         elevator: {
             type: Boolean,
-            required: false
+            required: false,
         },
         accessibility: {
             type: Boolean,
-            required: false
+            required: false,
         },
         furnituresIncluded: {
             type: Boolean,
-            required: false
+            required: false,
         },
         contractByRealState: {
             type: Boolean,
-            required: false
+            required: false,
         },
         balcony: {
             type: Boolean,
-            required: false
-        }
-    }
-});
+            required: false,
+        },
+    },
+})
 
-export default mongoose.model<IFlatModel>('Flat', FlatSchema);
+export default mongoose.model<IFlatModel>('Flat', FlatSchema)
