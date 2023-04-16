@@ -79,7 +79,7 @@ const FlatSchema = new Schema({
             required: false,
         },
         deposit: {
-            type: Number,
+            type: Boolean,
             required: false,
         },
         depositMonths: {

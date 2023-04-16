@@ -21,7 +21,7 @@ export interface IFlat {
         m2: number
         roomsNumber: number
         bathroomsNumber: number
-        deposit: number
+        deposit: boolean
         depositMonths: number
     }
     rating: {
