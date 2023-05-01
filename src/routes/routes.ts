@@ -1,15 +1,15 @@
 // IMPORT
-import express from 'express';
+import express from 'express'
 import flatRoute from './specific/flatRoute'
-import userRoute from './specific/userRoute'
-import ratingRoute from './specific/ratingRoute';
+import { userRouter } from '../users/infraestructure/http/user-router'
+import ratingRoute from './specific/ratingRoute'
 
-const app = express();
+const app = express()
 
 //  ROUTES
-app.use('/api/flat', flatRoute);
-app.use('/api/rating', ratingRoute);
-app.use('/api/user', userRoute)
+app.use('/api/flat', flatRoute)
+app.use('/api/rating', ratingRoute)
+app.use('/api/user', userRouter)
 
-//EXPORT 
-export default app;
+//EXPORT
+export default app
